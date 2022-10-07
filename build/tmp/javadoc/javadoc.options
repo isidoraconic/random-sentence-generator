@@ -1,0 +1,13 @@
+-classpath '/Users/isidoraconic/Desktop/Group_Isidora_Kendall/assignment4/build/classes/java/main:/Users/isidoraconic/Desktop/Group_Isidora_Kendall/assignment4/build/resources/main:/Users/isidoraconic/.gradle/caches/modules-2/files-2.1/com.googlecode.json-simple/json-simple/1.1.1/c9ad4a0850ab676c5c64461a05ca524cdfff59f1/json-simple-1.1.1.jar:/Users/isidoraconic/.gradle/caches/modules-2/files-2.1/junit/junit/4.10/e4f1766ce7404a08f45d859fb9c226fc9e41a861/junit-4.10.jar:/Users/isidoraconic/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.1/860340562250678d1a344907ac75754e259cdb14/hamcrest-core-1.1.jar'
+-d '/Users/isidoraconic/Desktop/Group_Isidora_Kendall/assignment4/build/docs/javadoc'
+-doctitle 'assignment4 1.0-SNAPSHOT API'
+-notimestamp 
+-quiet 
+-windowtitle 'assignment4 1.0-SNAPSHOT API'
+'/Users/isidoraconic/Desktop/Group_Isidora_Kendall/assignment4/src/main/java/Grammar.java'
+'/Users/isidoraconic/Desktop/Group_Isidora_Kendall/assignment4/src/main/java/UserInterface.java'
+'/Users/isidoraconic/Desktop/Group_Isidora_Kendall/assignment4/src/main/java/NoSuchJSONObjectException.java'
+'/Users/isidoraconic/Desktop/Group_Isidora_Kendall/assignment4/src/main/java/JSONFileParser.java'
+'/Users/isidoraconic/Desktop/Group_Isidora_Kendall/assignment4/src/main/java/NoSuchDirectoryException.java'
+'/Users/isidoraconic/Desktop/Group_Isidora_Kendall/assignment4/src/main/java/SentenceGenerator.java'
+'/Users/isidoraconic/Desktop/Group_Isidora_Kendall/assignment4/src/main/java/NoSuchGrammarTypeException.java'

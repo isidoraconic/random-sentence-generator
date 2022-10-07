@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="JSONFileParserTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2020-11-09T22:03:44" hostname="Isidoras-MacBook-Pro.local" time="0.006">
+  <properties/>
+  <testcase name="getTitleTest" classname="JSONFileParserTest" time="0.001"/>
+  <testcase name="getFileNameTest" classname="JSONFileParserTest" time="0.001"/>
+  <testcase name="notEqualsTest" classname="JSONFileParserTest" time="0.0"/>
+  <testcase name="notEqualObjectTest" classname="JSONFileParserTest" time="0.0"/>
+  <testcase name="equalsTest" classname="JSONFileParserTest" time="0.0"/>
+  <testcase name="getDescriptionTest" classname="JSONFileParserTest" time="0.001"/>
+  <testcase name="fakeConstructor" classname="JSONFileParserTest" time="0.0"/>
+  <testcase name="toStringTest" classname="JSONFileParserTest" time="0.0"/>
+  <testcase name="hashcodeTest" classname="JSONFileParserTest" time="0.0"/>
+  <testcase name="readFileTest" classname="JSONFileParserTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

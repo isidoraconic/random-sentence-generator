@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="UserInterfaceTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2020-11-09T22:03:44" hostname="Isidoras-MacBook-Pro.local" time="0.062">
+  <properties/>
+  <testcase name="addGrammar" classname="UserInterfaceTest" time="0.014"/>
+  <testcase name="testEquals2" classname="UserInterfaceTest" time="0.0"/>
+  <testcase name="menuCommand" classname="UserInterfaceTest" time="0.0"/>
+  <testcase name="checkInputFalse" classname="UserInterfaceTest" time="0.001"/>
+  <testcase name="setDirectory_InvalidPath" classname="UserInterfaceTest" time="0.001"/>
+  <testcase name="testToString" classname="UserInterfaceTest" time="0.001"/>
+  <testcase name="setRunMode" classname="UserInterfaceTest" time="0.001"/>
+  <testcase name="getSetDirectory_ValidPath" classname="UserInterfaceTest" time="0.001"/>
+  <testcase name="mainImmediateQuit" classname="UserInterfaceTest" time="0.03"/>
+  <testcase name="testHashCode" classname="UserInterfaceTest" time="0.001"/>
+  <testcase name="handleInputSingleCycle" classname="UserInterfaceTest" time="0.004"/>
+  <testcase name="testEquals" classname="UserInterfaceTest" time="0.001"/>
+  <testcase name="handleInputIndexOutOfBounds" classname="UserInterfaceTest" time="0.001"/>
+  <testcase name="testNotEquals" classname="UserInterfaceTest" time="0.001"/>
+  <system-out><![CDATA[The following grammars are available :
+[1] Insult Generator
+[2] Poem Generator
+[3] A sample grammar
+[4] A sample grammar
+[5] Term Paper Generator
+
+Please enter a number corresponding to one of the options above, or 'q' to quit.
+hi Sally Jones
+
+Enter a number corresponding to one of the menu options for another grammar, or 'q' to quit.
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

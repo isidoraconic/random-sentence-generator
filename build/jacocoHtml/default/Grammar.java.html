@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Grammar.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment4</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Grammar.java</span></div><h1>Grammar.java</h1><pre class="source lang-java linenums">import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
+import org.json.simple.parser.ParseException;
+
+/**
+ * Grammar Class
+ * This creates a Grammar object that contains all the data from a .json file
+ * The .json file is read/handled by the JSONFileParser class which helps creater the Grammar object
+ */
+public class Grammar {
+
+  private String grammarTitle;
+  private String grammarDesc;
+  private HashMap&lt;String, ArrayList&lt;String&gt;&gt; info;
+
+  /**
+   * Grammar object constructor 1
+   * Reads the JSONFileParser object and then gets the grammarTitle and grammarDesc
+   * @param file (JSONFileParser object)
+   * @throws IOException default error
+   * @throws ParseException default error
+   */
+<span class="fc" id="L26">  public Grammar(JSONFileParser file) throws IOException, ParseException {</span>
+<span class="fc" id="L27">    this.info = file.readFile();</span>
+<span class="fc" id="L28">    this.grammarTitle = file.getTitle();</span>
+<span class="fc" id="L29">    this.grammarDesc = file.getDesc();</span>
+<span class="fc" id="L30">  }</span>
+
+  /**
+   * Grammar object constructor 2
+   * Takes in a String fileName and then constructs the JSONFileParser object
+   * Then, does the same as Constructor 2: Reads the JSONFileParser object
+   * And gets the grammarTitle and grammarDesc
+   * @param fileName (String)
+   * @throws IOException default error
+   * @throws ParseException default error
+   */
+<span class="fc" id="L41">  public Grammar(String fileName) throws IOException, ParseException {</span>
+<span class="fc" id="L42">    JSONFileParser file = new JSONFileParser(fileName);</span>
+<span class="fc" id="L43">    this.info = file.readFile();</span>
+<span class="fc" id="L44">    this.grammarTitle = file.getTitle();</span>
+<span class="fc" id="L45">    this.grammarDesc = file.getDesc();</span>
+<span class="fc" id="L46">  }</span>
+
+  /**
+   * Getter method for the grammarTitle
+   * @return String grammarTitle
+   */
+  public String getGrammarTitle() {
+<span class="fc" id="L53">    return this.grammarTitle;</span>
+  }
+
+  /**
+   * Getter method for grammarDesc
+   * @return String grammarDesc
+   */
+  public String getGrammarDesc() {
+<span class="fc" id="L61">    return this.grammarDesc;</span>
+  }
+
+  /**
+   * Getter method for info
+   * @return HashMap with key String and value ArrayList of String info
+   */
+  public HashMap&lt;String, ArrayList&lt;String&gt;&gt; getInfo() {
+<span class="fc" id="L69">    return this.info;</span>
+  }
+
+  /**
+   * Getter method for a specific ArrayList of String within the info HashMap
+   * @param key (String)
+   * @return ArrayList of String associated with the given key
+   */
+  public ArrayList&lt;String&gt; getInfoValue(String key) {
+<span class="fc" id="L78">    return this.info.get(key);</span>
+  }
+
+  /**
+   * Overridden toString method for default toString()
+   * Note that grammarDesc is not used, because in the spec it is not guaranteed that each .json
+   * file will have a description (but it will have a title).
+   * @return String
+   */
+  @Override
+  public String toString() {
+<span class="fc" id="L89">    String string =  &quot;Grammar{&quot; +</span>
+        &quot;grammarTitle='&quot; + grammarTitle + '\'' +
+        &quot;, info=&quot; + info +
+        '}';
+<span class="fc" id="L93">    return string;</span>
+  }
+
+  /**
+   * Overridden equals method for default equals()
+   * @param o Object to compare equality
+   * @return Boolean if the objects are equal (true if yes, false if no)
+   */
+  @Override
+  public boolean equals(Object o) {
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">    if (this == o) {</span>
+<span class="nc" id="L104">      return true;</span>
+    }
+<span class="fc bfc" id="L106" title="All 2 branches covered.">    if (!(o instanceof Grammar)) {</span>
+<span class="fc" id="L107">      return false;</span>
+    }
+<span class="fc" id="L109">    Grammar grammar = (Grammar) o;</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">    return grammarTitle.equals(grammar.grammarTitle) &amp;&amp;</span>
+<span class="pc bpc" id="L111" title="1 of 2 branches missed.">        Objects.equals(grammarDesc, grammar.grammarDesc) &amp;&amp;</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">        info.equals(grammar.info);</span>
+  }
+
+  /**
+   * Overridden hashCode method for default hashCode()
+   * @return int (the hashcode of the given Grammar object)
+   */
+  @Override
+  public int hashCode() {
+<span class="fc" id="L121">    return Objects.hash(grammarTitle, grammarDesc, info);</span>
+  }
+
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

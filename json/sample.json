@@ -1,0 +1,14 @@
+{
+"grammarTitle": "A sample grammar",
+"grammarDesc": "A grammar that generates sample grammars.",
+"start":[ 
+"hi <name>"
+],
+
+"name":[ 
+"Sally <lastName>"],
+
+"lastName":[ 
+"Smith",
+"Jones"]
+}

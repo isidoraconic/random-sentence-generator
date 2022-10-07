@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SentenceGenerator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment4</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">SentenceGenerator.java</span></div><h1>SentenceGenerator.java</h1><pre class="source lang-java linenums">import org.json.simple.parser.ParseException;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Class to represent a sentence generator, like a factory design but not quite
+ * Takes in a Grammar object, and builds a string through recursive string replacement
+ * Properties:
+ * - sentence
+ * - grammar
+ * - placeholder pattern
+ * Methods:
+ * + find placeholder from regex
+ * + build grammar queue from string
+ * + generate sentence from grammar queue
+ * + get final sentence
+ */
+public class SentenceGenerator {
+
+    private String sentence;
+    private Grammar grammar;
+    private Long randomSeed;
+    private static final String PLACEHOLDER_PATTERN = &quot;(?&lt;=\\&lt;)(.*?)(?=\\&gt;)&quot;;
+
+    /**
+     * Default constructor for SentenceGenerator class, requires Grammar object to be passed
+     * @param grammar Grammar object created from JSONFileParser
+     * @param randomSeed random seed value passed from instantiation
+     */
+<span class="fc" id="L34">    public SentenceGenerator(Grammar grammar, Long randomSeed) {</span>
+<span class="fc" id="L35">        this.grammar = grammar;</span>
+<span class="fc" id="L36">        this.sentence = &quot;&quot;;</span>
+<span class="fc" id="L37">        this.randomSeed = randomSeed;</span>
+<span class="fc" id="L38">    }</span>
+
+    /**
+     * Overload of method to get random String from Grammar ArraList when a seed is used
+     * @param key String value for HashMap key
+     * @return random String element from ArrayList
+     * @throws NoSuchGrammarTypeException custom error for when grammar type is not present in grammar file
+     */
+    private String getRandomGrammarElement(String key) throws NoSuchGrammarTypeException{
+<span class="fc" id="L47">        ArrayList&lt;String&gt; grammarList = this.grammar.getInfoValue(key);</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        if (grammarList == null) {</span>
+<span class="fc" id="L49">            throw new NoSuchGrammarTypeException(&quot;The provided JSON file references a grammar type that is invalid or not defined.&quot;);</span>
+        }
+<span class="fc" id="L51">        Random rand = null;</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        if (this.randomSeed == null) {</span>
+<span class="fc" id="L53">            rand = new Random();</span>
+        } else {
+<span class="fc" id="L55">            rand = new Random(this.randomSeed);</span>
+        }
+<span class="fc" id="L57">        return grammarList.get(rand.nextInt(grammarList.size()));</span>
+    }
+
+    /**
+     * Method to find a placeholder within a String input using regex
+     * @param input String input token from randomly selected ArrayList element
+     * @return String placeholder found or null if no match
+     */
+    private static boolean isTokenPlaceholder(String input) {
+<span class="fc" id="L66">        Pattern pattern = Pattern.compile(PLACEHOLDER_PATTERN);</span>
+<span class="fc" id="L67">        Matcher matcher = pattern.matcher(input);</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (matcher.find()) {</span>
+<span class="fc" id="L69">            return true;</span>
+        } else {
+<span class="fc" id="L71">            return false;</span>
+        }
+    }
+
+    /**
+     * Method to build a Stack of String tokens from grammar element
+     * Stack is in reverse order so we can work with tokens from front to end (in sentence order)
+     * @param input String grammar element randomly chosen
+     * @return Stack of strings in reverse order
+     */
+    private static Stack&lt;String&gt; buildGrammarStack(String input) {
+<span class="fc" id="L82">        List&lt;String&gt; stringList = Arrays.asList(input.split(&quot; &quot;));</span>
+<span class="fc" id="L83">        int n = stringList.size();</span>
+<span class="fc" id="L84">        Stack&lt;String&gt; sentenceStack = new Stack&lt;String&gt;();</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        for (int i=n-1; i&gt;=0; i--) {</span>
+<span class="fc" id="L86">            sentenceStack.push(stringList.get(i));</span>
+        }
+<span class="fc" id="L88">        return sentenceStack;</span>
+    }
+
+    /**
+     * Helper method to build a sentence by getting random starting place,
+     * Then building the grammar stack, and passing the Stack into recursion
+     * @return String sentence built from recursive Stack string construction
+     * @throws NoSuchGrammarTypeException custom exception when grammar type not in JSON file
+     */
+    public String buildSentence() throws NoSuchGrammarTypeException{
+<span class="fc" id="L98">        String sentenceStart = getRandomGrammarElement(&quot;start&quot;);</span>
+<span class="fc" id="L99">        Stack&lt;String&gt; grammarStack = buildGrammarStack(sentenceStart);</span>
+<span class="fc" id="L100">        this.sentence = recursiveStringReplace(grammarStack).trim();</span>
+<span class="fc" id="L101">        return this.sentence;</span>
+    }
+
+    /**
+     * Method to recursively step into the Stack of grammar String
+     * Pops elements from Stack to check if placeholder match
+     * If placeholder match, swap placeholder with random choice, push back to Stack and recurse down
+     * Else append first element of Stack to complete sentence, and recurse down with remaining Stack
+     * @param grammarStack Stack of Strings in sentence order
+     * @return String constructed on recursion stack
+     */
+    private String recursiveStringReplace(Stack&lt;String&gt; grammarStack) throws NoSuchGrammarTypeException{
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (!grammarStack.empty()) {</span>
+<span class="fc" id="L114">            String topOfStack = grammarStack.pop();</span>
+<span class="fc" id="L115">            boolean matchResult = isTokenPlaceholder(topOfStack);</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">            if (matchResult) {</span>
+<span class="fc" id="L117">                String hashKey = topOfStack.replace(&quot;&lt;&quot;, &quot;&quot;).replace(&quot;&gt;&quot;,&quot;&quot;);</span>
+//                System.out.println(&quot;Top of stack: &quot; + hashKey);
+<span class="fc" id="L119">                String placeholderReplacement = getRandomGrammarElement(hashKey);</span>
+                //System.out.println(&quot;Replacing &quot; + topOfStack + &quot; by searching for &quot; + hashKey + &quot; with '&quot; + placeholderReplacement + &quot;'&quot;);
+<span class="fc" id="L121">                String[] replacementList = placeholderReplacement.split(&quot; &quot;);</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">                for (int i=replacementList.length-1; i&gt;=0; i--) {</span>
+<span class="fc" id="L123">                    grammarStack.push(replacementList[i]);</span>
+                }
+<span class="fc" id="L125">                return recursiveStringReplace(grammarStack);</span>
+            } else {
+<span class="fc" id="L127">                return topOfStack + &quot; &quot; + recursiveStringReplace(grammarStack);</span>
+            }
+        }
+<span class="fc" id="L130">        return &quot;&quot;;</span>
+    }
+
+    /**
+     * Override method for default toString()
+     * @return String
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L139">        return &quot;SentenceGenerator{&quot; +</span>
+                &quot;sentence='&quot; + sentence + '\'' +
+                &quot;, &quot; + grammar +
+                '}';
+    }
+
+    /**
+     * Override method for default equals()
+     * @param o object
+     * @return boolean
+     */
+    @Override
+    public boolean equals(Object o) {
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">        if (this == o) return true;</span>
+<span class="pc bpc" id="L153" title="2 of 4 branches missed.">        if (o == null || getClass() != o.getClass()) return false;</span>
+<span class="fc" id="L154">        SentenceGenerator that = (SentenceGenerator) o;</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        return Objects.equals(sentence, that.sentence) &amp;&amp;</span>
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">                Objects.equals(grammar, that.grammar);</span>
+    }
+
+    /**
+     * Override method for default hashCode()
+     * @return int
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L165">        return Objects.hash(sentence, grammar);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

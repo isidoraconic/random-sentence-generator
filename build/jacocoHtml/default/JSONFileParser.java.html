@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JSONFileParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment4</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">JSONFileParser.java</span></div><h1>JSONFileParser.java</h1><pre class="source lang-java linenums">import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.*;
+
+/**
+ * JSONFileParser Class
+ * This class is meant to take in a .json file, and parse out its elements
+ * The object itself is made up of the name of the json file, the delimiter by which to parse it
+ * Additionally, we added a grammarTitle and grammarDesc fields, in order to avoid opening and
+ * reading the file over and over simply for a field or two (this allows us to store the values
+ * the first time we read it).
+ */
+public class JSONFileParser {
+
+  private String jsonFile;
+  private String splitBy;
+  private String grammarTitle;
+  private String grammarDesc;
+  private final static String LINE_SPLIT = &quot;(?&lt;=\&quot;)[^,;](.*?)(?=\&quot;)&quot;;
+
+  /**
+   * Default constructor
+   * By default, the grammarTitle and grammarDesc are set to empty strings
+   * These fields will be populated when the readFile method is called (if they exist)
+   * @param fileName String of the file we are going to parse/handle
+   * @throws FileNotFoundException if the file doesn't exist
+   */
+<span class="fc" id="L37">  public JSONFileParser(String fileName) throws FileNotFoundException {</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">    if (!(new File(fileName).exists())) {</span>
+<span class="fc" id="L39">      throw new FileNotFoundException(&quot;The specified template file does not exist. &quot;</span>
+          + &quot;Please enter an existing file.&quot;);
+    } else {
+<span class="fc" id="L42">      this.jsonFile = fileName;</span>
+    }
+<span class="fc" id="L44">    this.splitBy = LINE_SPLIT;</span>
+<span class="fc" id="L45">    this.grammarTitle = &quot;&quot;;</span>
+<span class="fc" id="L46">    this.grammarDesc = &quot;&quot;;</span>
+<span class="fc" id="L47">  }</span>
+
+  /**
+   * Constructor that parses the file by a specific regex expression
+   * By default, the grammarTitle and grammarDesc are set to empty strings
+   * These fields will be populated when the readFile method is called (if they exist)
+   * @param fileName String of the file we are going to parse/handle
+   * @param splitBy String regex express by which to parse the .json file
+   * @throws FileNotFoundException if the file doesn't exist
+   */
+<span class="fc" id="L57">  public JSONFileParser(String fileName, String splitBy) throws FileNotFoundException {</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">    if (!(new File(fileName).exists())) {</span>
+<span class="nc" id="L59">      throw new FileNotFoundException(&quot;The specified file does not exist. &quot;</span>
+          + &quot;Please enter an existing file.&quot;);
+    } else {
+<span class="fc" id="L62">      this.jsonFile = fileName;</span>
+    }
+<span class="fc" id="L64">    this.splitBy = splitBy;</span>
+<span class="fc" id="L65">    this.grammarTitle = &quot;&quot;;</span>
+<span class="fc" id="L66">    this.grammarDesc = &quot;&quot;;</span>
+<span class="fc" id="L67">  }</span>
+
+  /**
+   * Getter method to get the name of the file
+   * @return String name of the .json file (this.jsonFile)
+   */
+  public String getFileName() {
+<span class="fc" id="L74">    return this.jsonFile;</span>
+  }
+
+  /**
+   * Method that reads the specified .json file, and parses it based on the specified regex
+   * @return HashMap with key String and value ArrayList of String info, which contains the file contents
+   * The String key is the key in json file, and then the ArrayList is a list of parsed contents
+   * (i.e. the data)
+   * @throws IOException default error
+   * @throws ParseException default error
+   */
+  public HashMap&lt;String, ArrayList&lt;String&gt;&gt; readFile() throws IOException, ParseException {
+
+    //Setting up the JSON parser
+<span class="fc" id="L88">    Object obj = new JSONParser().parse(new FileReader(this.jsonFile));</span>
+<span class="fc" id="L89">    JSONObject parser = (JSONObject) obj;</span>
+
+    //Making the hashmap to store all the parsed JSON file info
+<span class="fc" id="L92">    HashMap&lt;String, ArrayList&lt;String&gt;&gt; info = new HashMap&lt;&gt;();</span>
+
+    //Get all the keys and removing
+<span class="fc" id="L95">    Set keys = parser.keySet();</span>
+
+    //We dont want grammarTitle in the hashmap if it exists in the file
+    //If it exists, assign it to the grammarTitle field
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">    if(keys.contains(&quot;grammarTitle&quot;)) {</span>
+<span class="fc" id="L100">      this.grammarTitle = (String) parser.get(&quot;grammarTitle&quot;);</span>
+<span class="fc" id="L101">      keys.remove(&quot;grammarTitle&quot;);</span>
+    }
+
+    //We dont want grammarDesc in the hashmap if it exists in the file
+    //If it exists, assign it to the grammarDesc field
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">    if(keys.contains(&quot;grammarDesc&quot;)) {</span>
+<span class="fc" id="L107">      this.grammarDesc = (String) parser.get(&quot;grammarDesc&quot;);</span>
+<span class="fc" id="L108">      keys.remove(&quot;grammarDesc&quot;);</span>
+    }
+
+    //now, we iterate through all the rest of the keys
+    //get the values corresponding to the list by parsing them and adding to a list
+<span class="fc bfc" id="L113" title="All 2 branches covered.">    for(Object s : keys) {</span>
+
+      //Getting one of the keys
+<span class="fc" id="L116">      String key = (String) s;</span>
+
+      //Get the key as a STRING
+<span class="fc" id="L119">      String line = parser.get(key).toString();</span>
+
+      //ArrayList to store all the key values, created by splitting the values in the string
+<span class="fc" id="L122">      ArrayList&lt;String&gt; keyValues = patternMatch(line);</span>
+
+      //Add the arraylist and corresponding key to the hashmap
+<span class="fc" id="L125">      info.put(key, keyValues);</span>
+<span class="fc" id="L126">    }</span>
+<span class="fc" id="L127">    return info;</span>
+  }
+
+  /**
+   * Helper method for the readFile method
+   * @param inputString String that needs to be parsed based on the parseBy field
+   * @return ArrayList of String containing all the parsed strings
+   */
+  private ArrayList&lt;String&gt; patternMatch(String inputString) {
+<span class="fc" id="L136">    ArrayList&lt;String&gt; parsedString = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L137">    Pattern pattern = Pattern.compile(this.splitBy);</span>
+<span class="fc" id="L138">    Matcher matcher = pattern.matcher(inputString);</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">    while (matcher.find()) {</span>
+<span class="fc" id="L140">      parsedString.add(matcher.group());</span>
+    }
+<span class="fc" id="L142">    return parsedString;</span>
+  }
+
+  /**
+   * Getter method to get the grammarTitle
+   * Will return an empty String (i.e. &quot;&quot;) if the readFile method hasn't been called yet
+   * @return String grammarTitle
+   */
+  public String getTitle() {
+<span class="fc" id="L151">    return this.grammarTitle;</span>
+  }
+
+  /**
+   * Getter method to get the grammarDesc
+   * Will return an empty String (i.e. &quot;&quot;) if the readFile method hasn't been called yet
+   * or if grammarDesc hasn't been given in the .json file
+   * @return String of grammar description
+   */
+  public String getDesc() {
+<span class="fc" id="L161">    return this.grammarDesc;</span>
+  }
+
+  /**
+   * Overridden toString method for default toString()
+   * @return String
+   */
+  @Override
+  public String toString() {
+<span class="fc" id="L170">    return &quot;JSONFileParser{&quot; +</span>
+        &quot;jsonFile='&quot; + jsonFile + '\'' +
+        '}';
+  }
+
+  /**
+   * Overridden equals method for default equals()
+   * @param o Object to compare equality
+   * @return Boolean if the objects are equal (true if yes, false if no)
+   */
+  @Override
+  public boolean equals(Object o) {
+<span class="pc bpc" id="L182" title="1 of 2 branches missed.">    if (this == o) {</span>
+<span class="nc" id="L183">      return true;</span>
+    }
+<span class="fc bfc" id="L185" title="All 2 branches covered.">    if (!(o instanceof JSONFileParser)) {</span>
+<span class="fc" id="L186">      return false;</span>
+    }
+<span class="fc" id="L188">    JSONFileParser that = (JSONFileParser) o;</span>
+<span class="fc" id="L189">    return jsonFile.equals(that.jsonFile);</span>
+  }
+
+  /**
+   * Overridden hashCode method for default hashCode()
+   * @return int (the hashcode of the given JSONFileParser object)
+   */
+  @Override
+  public int hashCode() {
+<span class="fc" id="L198">    return Objects.hash(jsonFile);</span>
+  }
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
